@@ -7,7 +7,7 @@ app = FastAPI()
 class Blog(BaseModel):
     title: str
     body: str
-    published: bool
+    published: Optional[bool]
 
 @app.get('/')
 def index():
@@ -35,5 +35,5 @@ def comments(id: int, limit: int):
 @app.post('/blog')
 def create_blog(blog: Blog):
     return {
-        'data': 'Blog is created'
+        'data': f'Blog is created with title: {blog.title}'
     }
