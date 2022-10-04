@@ -1,9 +1,9 @@
 from fastapi import APIRouter
 from typing import Optional
 
-from schemas import Blog
+from .schemas import Blog
 
-blog_router = APIRouter(prefix='/blog')
+blog_router = APIRouter(prefix='/blog', tags=['Blog'])
 
 @blog_router.get('/')
 def get_blog(limit: int, publised: bool = True, sort: Optional[str] = None):
