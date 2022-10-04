@@ -1,3 +1,4 @@
+from typing import Optional
 from fastapi import FastAPI
 
 app = FastAPI()
@@ -9,8 +10,11 @@ def index():
     }
 
 @app.get('/blog')
-def get_blog(limit: int, publised: bool = True):
-    return { 'data': f'{limit} blog list' }
+def get_blog(limit: int, publised: bool = True, sort: Optional[str] = None):
+    if publised:
+        return { 'data': f'{limit} blog list PUBLISHED' }
+    else:
+        return { 'data': f'{limit} blog list UNPUBLISHED' }
 
 @app.get('/blog/{id}')
 def get_blog(id: int):
