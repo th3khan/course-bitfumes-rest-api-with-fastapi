@@ -25,3 +25,9 @@ def comments(id: int, limit: int):
     return {
         'data': f'Get {limit} comment from blog with id: {id}'
     }
+
+@app.post('/blog')
+def create_blog():
+    return {
+        'data': 'Blog is created'
+    }
