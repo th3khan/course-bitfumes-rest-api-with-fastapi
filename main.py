@@ -9,8 +9,8 @@ def index():
     }
 
 @app.get('/blog')
-def get_blog(limit: int):
-    return { 'data': 'blog list' }
+def get_blog(limit: int, publised: bool = True):
+    return { 'data': f'{limit} blog list' }
 
 @app.get('/blog/{id}')
 def get_blog(id: int):
