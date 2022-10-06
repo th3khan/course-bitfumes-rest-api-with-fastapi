@@ -12,20 +12,20 @@ def get_blog(db: Session = Depends(get_db)):
     blogs = db.query(Blog).all()
     return blogs
 
-@blog_router.get('/blog/{id}', status_code=status.HTTP_200_OK)
+@blog_router.get('/{id}', status_code=status.HTTP_200_OK)
 def get_blog(id: int, db: Session = Depends(get_db)):
     blog = db.query(Blog).filter(Blog.id == id).first()
     if not blog:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail='Blog not exist.')
     return blog
 
-@blog_router.get('/blog/{id}/comments')
+@blog_router.get('/{id}/comments')
 def comments(id: int, limit: int):
     return {
         'data': f'Get {limit} comment from blog with id: {id}'
     }
 
-@blog_router.post('/blog', status_code=status.HTTP_201_CREATED)
+@blog_router.post('/', status_code=status.HTTP_201_CREATED)
 def create_blog(blog: BlogRequest, db: Session = Depends(get_db)):
     new_blog = Blog(title=blog.title, body=blog.body)
     
@@ -34,3 +34,13 @@ def create_blog(blog: BlogRequest, db: Session = Depends(get_db)):
     db.refresh(new_blog)
 
     return new_blog
+
+@blog_router.delete('/{id}', status_code=status.HTTP_204_NO_CONTENT)
+def delete_blog(id: int, db: Session = Depends(get_db)):
+    blog = db.query(Blog).filter(Blog.id == id).first()
+    if not blog:
+        raise HTTPException(detail='Blog not Exists', status_code=404)
+    
+    db.query(Blog).filter(Blog.id == id).delete()
+    db.commit()
+    return
