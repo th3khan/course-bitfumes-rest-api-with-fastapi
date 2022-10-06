@@ -1,5 +1,4 @@
-from fastapi import APIRouter, Depends
-from typing import Optional
+from fastapi import APIRouter, Depends, status
 from sqlalchemy.orm import Session
 
 from .schemas import BlogRequest
@@ -24,7 +23,7 @@ def comments(id: int, limit: int):
         'data': f'Get {limit} comment from blog with id: {id}'
     }
 
-@blog_router.post('/blog')
+@blog_router.post('/blog', status_code=status.HTTP_201_CREATED)
 def create_blog(blog: BlogRequest, db: Session = Depends(get_db)):
     new_blog = Blog(title=blog.title, body=blog.body)
     
