@@ -14,8 +14,9 @@ def get_blog(db: Session = Depends(get_db)):
     return blogs
 
 @blog_router.get('/blog/{id}')
-def get_blog(id: int):
-    return { 'data' : id }
+def get_blog(id: int, db: Session = Depends(get_db)):
+    blog = db.query(Blog).filter(Blog.id == id).first()
+    return blog
 
 @blog_router.get('/blog/{id}/comments')
 def comments(id: int, limit: int):
