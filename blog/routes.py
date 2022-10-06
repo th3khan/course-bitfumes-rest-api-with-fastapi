@@ -37,11 +37,11 @@ def create_blog(blog: BlogRequest, db: Session = Depends(get_db)):
 
 @blog_router.delete('/{id}', status_code=status.HTTP_204_NO_CONTENT)
 def delete_blog(id: int, db: Session = Depends(get_db)):
-    blog = db.query(Blog).filter(Blog.id == id).first()
-    if not blog:
+    blog = db.query(Blog).filter(Blog.id == id)
+    if not blog.first():
         raise HTTPException(detail='Blog not Exists', status_code=404)
     
-    db.query(Blog).filter(Blog.id == id).delete()
+    blog.delete()
     db.commit()
     return
 
