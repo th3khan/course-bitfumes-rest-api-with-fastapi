@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends, status, Response
 from sqlalchemy.orm import Session
 
 from .schemas import BlogRequest
@@ -12,9 +12,12 @@ def get_blog(db: Session = Depends(get_db)):
     blogs = db.query(Blog).all()
     return blogs
 
-@blog_router.get('/blog/{id}')
-def get_blog(id: int, db: Session = Depends(get_db)):
+@blog_router.get('/blog/{id}', status_code=status.HTTP_200_OK)
+def get_blog(id: int, response: Response, db: Session = Depends(get_db)):
     blog = db.query(Blog).filter(Blog.id == id).first()
+    if not blog:
+        response.status_code = status.HTTP_404_NOT_FOUND
+        return {'detail': 'Blog not exist.'}
     return blog
 
 @blog_router.get('/blog/{id}/comments')
