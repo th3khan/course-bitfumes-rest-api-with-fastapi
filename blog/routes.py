@@ -46,12 +46,12 @@ def delete_blog(id: int, db: Session = Depends(get_db)):
     return
 
 @blog_router.put('/{id}', status_code=status.HTTP_202_ACCEPTED)
-def delete_blog(id: int, request: BlogRequest,  db: Session = Depends(get_db)):
-    blog = db.query(Blog).filter(Blog.id == id).first()
-    if not blog:
+def update_blog(id: int, request: BlogRequest,  db: Session = Depends(get_db)):
+    blog = db.query(Blog).filter(Blog.id == id)
+    if not blog.first():
         raise HTTPException(detail='Blog not Exists', status_code=404)
     
-    db.query(Blog).filter(Blog.id == id).update({
+    blog.update({
         'title': request.title,
         'body': request.body
     })
