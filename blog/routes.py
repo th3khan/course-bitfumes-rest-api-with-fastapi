@@ -23,7 +23,11 @@ def comments(id: int, limit: int):
     }
 
 @blog_router.post('/blog')
-def create_blog(blog: Blog):
-    return {
-        'data': f'Blog is created with title: {blog.title}'
-    }
+def create_blog(blog: BlogRequest, db: Session = Depends(get_db)):
+    new_blog = Blog(title=blog.title, body=blog.body)
+    
+    db.add(new_blog)
+    db.commit()
+    db.refresh(new_blog)
+
+    return new_blog
