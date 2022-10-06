@@ -1,16 +1,17 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from typing import Optional
+from sqlalchemy.orm import Session
 
-from .schemas import Blog
+from .schemas import BlogRequest
+from .models  import Blog
+from database  import get_db
 
 blog_router = APIRouter(prefix='/blog', tags=['Blog'])
 
 @blog_router.get('/')
-def get_blog(limit: int, publised: bool = True, sort: Optional[str] = None):
-    if publised:
-        return { 'data': f'{limit} blog list PUBLISHED' }
-    else:
-        return { 'data': f'{limit} blog list UNPUBLISHED' }
+def get_blog(db: Session = Depends(get_db)):
+    blogs = db.query(Blog).all()
+    return blogs
 
 @blog_router.get('/blog/{id}')
 def get_blog(id: int):
