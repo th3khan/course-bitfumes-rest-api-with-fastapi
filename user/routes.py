@@ -26,3 +26,12 @@ def create_user(request: UserRequest, db: Session = Depends(get_db)):
     db.refresh(new_user)
 
     return new_user
+
+@user_router.get('/{id}', status_code=status.HTTP_200_OK, response_model=UserResponse)
+def create_user(id: int, db: Session = Depends(get_db)):
+    user = db.query(User).where(User.id == id).first()
+
+    if not user:
+        raise HTTPException(detail="User not found.", status_code=status.HTTP_404_NOT_FOUND)
+
+    return user
