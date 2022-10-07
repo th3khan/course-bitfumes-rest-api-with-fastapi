@@ -3,7 +3,6 @@ from pydantic import BaseModel
 class UserBase(BaseModel):
 
     email: str
-    password: str
     name: str
 
 class UserResponse(UserBase):
@@ -13,4 +12,4 @@ class UserResponse(UserBase):
         orm_mode = True
 
 class UserRequest(UserBase):
-    pass
+    password: str
