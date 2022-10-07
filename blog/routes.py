@@ -1,18 +1,19 @@
 from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.orm import Session
+from typing import List
 
-from .schemas import BlogRequest
+from .schemas import BlogRequest, BlogResponse
 from .models  import Blog
 from database  import get_db
 
 blog_router = APIRouter(prefix='/blog', tags=['Blog'])
 
-@blog_router.get('/')
+@blog_router.get('/', response_model=List[BlogResponse])
 def get_blog(db: Session = Depends(get_db)):
     blogs = db.query(Blog).all()
     return blogs
 
-@blog_router.get('/{id}', status_code=status.HTTP_200_OK)
+@blog_router.get('/{id}', status_code=status.HTTP_200_OK, response_model=BlogResponse)
 def get_blog(id: int, db: Session = Depends(get_db)):
     blog = db.query(Blog).filter(Blog.id == id).first()
     if not blog:
@@ -25,7 +26,7 @@ def comments(id: int, limit: int):
         'data': f'Get {limit} comment from blog with id: {id}'
     }
 
-@blog_router.post('/', status_code=status.HTTP_201_CREATED)
+@blog_router.post('/', status_code=status.HTTP_201_CREATED, response_model=BlogResponse)
 def create_blog(blog: BlogRequest, db: Session = Depends(get_db)):
     new_blog = Blog(title=blog.title, body=blog.body)
     
