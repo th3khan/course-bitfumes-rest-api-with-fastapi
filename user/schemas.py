@@ -13,3 +13,4 @@ class UserResponse(UserBase):
 
 class UserRequest(UserBase):
     password: str
+    password_confirmation: str
