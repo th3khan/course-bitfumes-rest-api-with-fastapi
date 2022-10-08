@@ -1,5 +1,3 @@
-import email
-from unicodedata import name
 from fastapi import APIRouter, Depends, status, HTTPException
 from sqlalchemy.orm import Session
 from typing import List
@@ -14,6 +12,10 @@ user_router = APIRouter(prefix='/users', tags=['Users'])
 
 @user_router.post('/', status_code=status.HTTP_201_CREATED, response_model=UserResponse)
 def create_user(request: UserRequest, db: Session = Depends(get_db)):
+    if request.password != request.password_confirmation:
+        raise HTTPException(detail="Password not equals.", status_code=status.HTTP_400_BAD_REQUEST)
+
+
     userExists = db.query(User).where(User.email == request.email).first()
 
     if userExists:
