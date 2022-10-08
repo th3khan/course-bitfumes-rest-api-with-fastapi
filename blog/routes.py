@@ -28,7 +28,7 @@ def comments(id: int, limit: int):
 
 @blog_router.post('/', status_code=status.HTTP_201_CREATED, response_model=BlogResponse)
 def create_blog(blog: BlogRequest, db: Session = Depends(get_db)):
-    new_blog = Blog(title=blog.title, body=blog.body)
+    new_blog = Blog(title=blog.title, body=blog.body, user_id=1)
     
     db.add(new_blog)
     db.commit()
