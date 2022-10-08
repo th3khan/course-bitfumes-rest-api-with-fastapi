@@ -1,8 +1,11 @@
-from passlib.context import CryptContext
+from cryptography.fernet import Fernet
 
-pwd_ctx = CryptContext(schemes=["bcrypt"], deprecated="auto")
+key = Fernet.generate_key()
+f = Fernet(key)
+
 
 class Hash():
 
     def bcrypy(password: str) -> str:
-        return pwd_ctx.hash(password)
+        passHashed = f.encrypt(password.encode('utf-8'))
+        return passHashed
