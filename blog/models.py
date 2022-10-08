@@ -1,4 +1,5 @@
-from sqlalchemy import Column, BigInteger, String, Text
+from sqlalchemy import Column, BigInteger, String, Text, ForeignKey
+from sqlalchemy.orm import relationship
 from database import Base
 
 
@@ -11,8 +12,17 @@ class Blog(Base):
         index=True
     )
     title = Column(
-        String(255)
+        String(255),
+        nullable=False
     )
     body = Column(
-        Text
+        Text,
+        nullable=False
     )
+    user_id = Column(
+        BigInteger,
+        ForeignKey('users.id'),
+        nullable=False
+    )
+
+    author = relationship("models.User", back_populates="blogs")
